@@ -39,6 +39,8 @@ class Factory
                 return new PostgresqlMetadata($adapter);
             case 'Oracle':
                 return new OracleMetadata($adapter);
+            case 'IBM DB2':
+                return new Db2Metadata($adapter);
             default:
                 throw new InvalidArgumentException("Unknown adapter platform '{$platformName}'");
         }
