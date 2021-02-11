@@ -129,6 +129,8 @@ abstract class AnsiMetadata extends AbstractSource
                   . ' != \'INFORMATION_SCHEMA\'';
         }
 
+        echo "[$sql]\n";
+
         $results = $this->adapter->query($sql, Adapter::QUERY_MODE_EXECUTE);
 
         $tables = [];
@@ -141,6 +143,9 @@ abstract class AnsiMetadata extends AbstractSource
                 'is_updatable' => ('YES' == $row['IS_UPDATABLE']),
             ];
         }
+
+
+        var_dump($tables);
 
         $this->data['table_names'][$schema] = $tables;
     }
@@ -172,8 +177,8 @@ abstract class AnsiMetadata extends AbstractSource
         });
 
         $sql = 'SELECT ' . implode(', ', $isColumns)
-             . ' FROM ' . $this->getSchemaTableName('TABLES', $p) . 'T'
-             . ' INNER JOIN ' . $this->getSchemaTableName('COLUMNS', $p) . 'C'
+             . ' FROM ' . $this->getSchemaTableName('TABLES', $p) . ' T'
+             . ' INNER JOIN ' . $this->getSchemaTableName('COLUMNS', $p) . ' C'
              . ' ON ' . $p->quoteIdentifierChain(['T', 'TABLE_SCHEMA'])
              . '  = ' . $p->quoteIdentifierChain(['C', 'TABLE_SCHEMA'])
              . ' AND ' . $p->quoteIdentifierChain(['T', 'TABLE_NAME'])

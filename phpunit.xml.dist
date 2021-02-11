@@ -54,6 +54,7 @@
         <env name="TESTS_LAMINAS_DB_ADAPTER_DRIVER_IBMDB2_USERNAME" value="" />
         <env name="TESTS_LAMINAS_DB_ADAPTER_DRIVER_IBMDB2_PASSWORD" value="" />
         <env name="TESTS_LAMINAS_DB_ADAPTER_DRIVER_IBMDB2_DATABASE" value="" />
+        <env name="TESTS_LAMINAS_DB_ADAPTER_DRIVER_IBMDB2_SCHEMA" value="laminasdb_test" />
 
         <env name="TESTS_LAMINAS_DB_ADAPTER_DRIVER_PGSQL" value="false" />
         <env name="TESTS_LAMINAS_DB_ADAPTER_DRIVER_PGSQL_HOSTNAME" value="localhost" />

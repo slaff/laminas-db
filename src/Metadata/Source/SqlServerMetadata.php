@@ -139,4 +139,75 @@ class SqlServerMetadata extends AnsiMetadata
 
         $this->data['constraints'][$schema][$table] = $constraints;
     }
+
+    protected function loadTriggerData($schema)
+    {
+        if (isset($this->data['triggers'][$schema])) {
+            return;
+        }
+
+        $this->prepareDataHierarchy('triggers', $schema);
+
+        $p = $this->adapter->getPlatform();
+
+        $isColumns = [
+//            'TRIGGER_CATALOG',
+//            'TRIGGER_SCHEMA',
+            'TRIGGER_NAME',
+            'EVENT_MANIPULATION',
+//             'EVENT_OBJECT_CATALOG',
+            'EVENT_OBJECT_SCHEMA',
+            'EVENT_OBJECT_TABLE',
+            'ACTION_ORDER',
+            'ACTION_CONDITION',
+            'ACTION_STATEMENT',
+            'ACTION_ORIENTATION',
+            'ACTION_TIMING',
+            'ACTION_REFERENCE_OLD_TABLE',
+            'ACTION_REFERENCE_NEW_TABLE',
+            'ACTION_REFERENCE_OLD_ROW',
+            'ACTION_REFERENCE_NEW_ROW',
+            'CREATED',
+        ];
+
+        array_walk($isColumns, function (&$c) use ($p) {
+            $c = $p->quoteIdentifier($c);
+        });
+
+        $sql = "SELECT 
+                    sysobjects.name AS trigger_name,
+                    USER_NAME(sysobjects.uid) AS trigger_owner,
+                    s.name AS table_schema,
+                    OBJECT_NAME(parent_obj) AS table_name,
+                    OBJECTPROPERTY( id, 'ExecIsUpdateTrigger') AS isupdate,
+                    OBJECTPROPERTY( id, 'ExecIsDeleteTrigger') AS isdelete,
+                    OBJECTPROPERTY( id, 'ExecIsInsertTrigger') AS isinsert,
+                    OBJECTPROPERTY( id, 'ExecIsAfterTrigger') AS isafter,
+                    OBJECTPROPERTY( id, 'ExecIsInsteadOfTrigger') AS isinsteadof,
+                    OBJECTPROPERTY(id, 'ExecIsTriggerDisabled') AS [disabled],
+                    sysobjects.crdate AS CREATED
+                FROM sysobjects
+                     INNER JOIN sysusers
+                                ON sysobjects.uid = sysusers.uid
+            
+                     INNER JOIN sys.tables t
+                                ON sysobjects.parent_obj = t.object_id
+            
+                     INNER JOIN sys.schemas s
+                                ON t.schema_id = s.schema_id
+                WHERE sysobjects.type = 'TR' AND s.name= " . $p->quoteTrustedValue($schema);
+
+        $results = $this->adapter->query($sql, Adapter::QUERY_MODE_EXECUTE);
+
+        $data = [];
+        foreach ($results->toArray() as $row) {
+            $row = array_change_key_case($row, CASE_LOWER);
+            if (null !== $row['created']) {
+                $row['created'] = new \DateTime($row['created']);
+            }
+            $data[$row['trigger_name']] = $row;
+        }
+
+        $this->data['triggers'][$schema] = $data;
+    }
 }

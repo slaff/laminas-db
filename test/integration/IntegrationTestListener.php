@@ -33,11 +33,18 @@ class IntegrationTestListener extends BaseTestListener
             return;
         }
 
+        if (getenv('TESTS_LAMINAS_DB_ADAPTER_DRIVER_IBMDB2')) {
+            $this->fixtureLoader = new \LaminasIntegrationTest\Db\Platform\Db2FixtureLoader();
+        }
         if (getenv('TESTS_LAMINAS_DB_ADAPTER_DRIVER_MYSQL')) {
             $this->fixtureLoader = new \LaminasIntegrationTest\Db\Platform\MysqlFixtureLoader();
         }
         if (getenv('TESTS_LAMINAS_DB_ADAPTER_DRIVER_PGSQL')) {
             $this->fixtureLoader = new \LaminasIntegrationTest\Db\Platform\PgsqlFixtureLoader();
+        }
+
+        if (getenv('TESTS_LAMINAS_DB_ADAPTER_DRIVER_SQLSRV')) {
+            $this->fixtureLoader = new \LaminasIntegrationTest\Db\Platform\SqlServerFixtureLoader();
         }
 
         if (! isset($this->fixtureLoader)) {

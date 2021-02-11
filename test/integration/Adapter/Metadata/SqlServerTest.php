@@ -16,7 +16,7 @@ use Laminas\Db\Metadata\Source\Factory;
  * @group integration
  * @group integration-mysql
  */
-class MysqlTest extends AnsiTestCase
+class SqlServerTest extends AnsiTestCase
 {
     /**
      * @var MetadataInterface
@@ -26,34 +26,29 @@ class MysqlTest extends AnsiTestCase
 
     protected function setUp()
     {
-        if (! getenv('TESTS_LAMINAS_DB_ADAPTER_DRIVER_MYSQL')) {
+        if (! getenv('TESTS_LAMINAS_DB_ADAPTER_DRIVER_SQLSRV')) {
             $this->markTestSkipped(__CLASS__ . ' integration tests are not enabled!');
         }
         $driver = null;
-        if (extension_loaded('mysqli')) {
-            $driver = 'mysqli';
+        if (extension_loaded('sqlsrv')) {
+            $driver = 'sqlsrv';
         } elseif (extension_loaded('pdo')) {
-            $driver = 'pdo_mysql';
+            $driver = 'pdo_sqlsrv';
         }
 
         if (! $driver) {
-            $this->markTestSkipped(__CLASS__ . ' no valid MySQL driver found!');
+            $this->markTestSkipped(__CLASS__ . ' no valid SqlServer driver found!');
             return;
         }
 
         $this->source = Factory::createSourceFromAdapter(new Adapter([
             'driver' => $driver,
-            'hostname' => getenv('TESTS_LAMINAS_DB_ADAPTER_DRIVER_MYSQL_HOSTNAME'),
-            'username' => getenv('TESTS_LAMINAS_DB_ADAPTER_DRIVER_MYSQL_USERNAME'),
-            'password' => getenv('TESTS_LAMINAS_DB_ADAPTER_DRIVER_MYSQL_PASSWORD'),
-            'database' => getenv('TESTS_LAMINAS_DB_ADAPTER_DRIVER_MYSQL_DATABASE')
+            'hostname' => getenv('TESTS_LAMINAS_DB_ADAPTER_DRIVER_SQLSRV_HOSTNAME'),
+            'username' => getenv('TESTS_LAMINAS_DB_ADAPTER_DRIVER_SQLSRV_USERNAME'),
+            'password' => getenv('TESTS_LAMINAS_DB_ADAPTER_DRIVER_SQLSRV_PASSWORD'),
+            'database' => getenv('TESTS_LAMINAS_DB_ADAPTER_DRIVER_SQLSRV_DATABASE')
         ]));
 
-        $this->defaultSchema = getenv('TESTS_LAMINAS_DB_ADAPTER_DRIVER_MYSQL_DATABASE');
-    }
-
-    public function testGetSchemas()
-    {
-        $this->assertContains($this->defaultSchema, $this->source->getSchemas());
+        $this->defaultSchema = null;
     }
 }
