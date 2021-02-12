@@ -59,7 +59,7 @@ class Db2FixtureLoader implements FixtureLoader
     {
         $this->connect();
 
-        if (false === db2_exec($this->connection,(sprintf(
+        if (false === db2_exec($this->connection, (sprintf(
             "DROP SCHEMA %s",
             getenv('TESTS_LAMINAS_DB_ADAPTER_DRIVER_IBMDB2_SCHEMA')
         )))) {
@@ -75,13 +75,13 @@ class Db2FixtureLoader implements FixtureLoader
 
     protected function connect()
     {
-        $this->connection = db2_connect (
+        $this->connection = db2_connect(
             getenv('TESTS_LAMINAS_DB_ADAPTER_DRIVER_IBMDB2_DATABASE'),
             getenv('TESTS_LAMINAS_DB_ADAPTER_DRIVER_IBMDB2_USERNAME'),
             getenv('TESTS_LAMINAS_DB_ADAPTER_DRIVER_IBMDB2_PASSWORD')
         );
 
-        if(false === $this->connection) {
+        if (false === $this->connection) {
             throw new \Exception(sprintf(
                 "Cannot connect to DB2 database: %s. %s",
                 getenv('TESTS_LAMINAS_DB_ADAPTER_DRIVER_IBMDB2_DATABASE'),

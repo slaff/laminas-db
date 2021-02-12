@@ -39,8 +39,8 @@ abstract class AnsiTestCase extends TestCase
     {
         $tables = $this->source->getTables($this->defaultSchema);
         $foundTestTable = false;
-        foreach($tables as $table) {
-            if($table->getName() == 'test') {
+        foreach ($tables as $table) {
+            if ($table->getName() == 'test') {
                 $foundTestTable = true;
                 break;
             }
@@ -53,8 +53,8 @@ abstract class AnsiTestCase extends TestCase
     {
         $views = $this->source->getViews($this->defaultSchema);
         $foundViewTable = false;
-        foreach($views as $view) {
-            if(strpos($view->getViewDefinition(), 'v_value') >= -1) {
+        foreach ($views as $view) {
+            if (strpos($view->getViewDefinition(), 'v_value') >= -1) {
                 $foundViewTable = true;
                 break;
             }

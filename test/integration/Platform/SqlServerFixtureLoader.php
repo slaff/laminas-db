@@ -8,12 +8,16 @@
 
 namespace LaminasIntegrationTest\Db\Platform;
 
+use function sqlsrv_connect;
+use sqlsrv_query;
+use sqlsrv_errors;
+
 class SqlServerFixtureLoader implements FixtureLoader
 {
 
     private $fixtureFilePrefix = __DIR__ . '/../TestFixtures/sqlsrv';
     /**
-     * @var \sqlsrv_connect
+     * @var resource
      */
     private $connection;
 
@@ -21,14 +25,14 @@ class SqlServerFixtureLoader implements FixtureLoader
     {
         $this->connect();
 
-        if (false === sqlsrv_query($this->connection,sprintf(
-                "IF NOT EXISTS(SELECT * FROM sys.databases WHERE name = '%s')
+        if (false === sqlsrv_query($this->connection, sprintf(
+            "IF NOT EXISTS(SELECT * FROM sys.databases WHERE name = '%s')
   BEGIN
     CREATE DATABASE [%s] 
   END",
-                getenv('TESTS_LAMINAS_DB_ADAPTER_DRIVER_SQLSRV_DATABASE'),
-                getenv('TESTS_LAMINAS_DB_ADAPTER_DRIVER_SQLSRV_DATABASE')
-            ))) {
+            getenv('TESTS_LAMINAS_DB_ADAPTER_DRIVER_SQLSRV_DATABASE'),
+            getenv('TESTS_LAMINAS_DB_ADAPTER_DRIVER_SQLSRV_DATABASE')
+        ))) {
             throw new \Exception(sprintf(
                 "I cannot create the MSSQL %s database: %s",
                 getenv('TESTS_LAMINAS_DB_ADAPTER_DRIVER_SQLSRV_DATABASE'),
@@ -44,7 +48,7 @@ class SqlServerFixtureLoader implements FixtureLoader
             'triggers' => $this->fixtureFilePrefix.'-triggers.sql',
         ];
 
-        foreach($fixtures as $name=>$fixtureFile) {
+        foreach ($fixtures as $name => $fixtureFile) {
             if (false === sqlsrv_query($this->connection, file_get_contents($fixtureFile))) {
                 throw new \Exception(sprintf(
                     "I cannot create the %s for %s database. Check the %s file. %s ",
@@ -69,7 +73,7 @@ class SqlServerFixtureLoader implements FixtureLoader
             getenv('TESTS_LAMINAS_DB_ADAPTER_DRIVER_SQLSRV_DATABASE')
         ));
 
-        if(false == sqlsrv_query($this->connection, sprintf(
+        if (false == sqlsrv_query($this->connection, sprintf(
             "DROP DATABASE %s",
             getenv('TESTS_LAMINAS_DB_ADAPTER_DRIVER_SQLSRV_DATABASE')
         ))) {
@@ -85,7 +89,7 @@ class SqlServerFixtureLoader implements FixtureLoader
 
     protected function connect()
     {
-        $this->connection =\sqlsrv_connect(
+        $this->connection = sqlsrv_connect(
             getenv('TESTS_LAMINAS_DB_ADAPTER_DRIVER_SQLSRV_HOSTNAME'),
             [
                 'UID' => getenv('TESTS_LAMINAS_DB_ADAPTER_DRIVER_SQLSRV_USERNAME'),
@@ -93,7 +97,7 @@ class SqlServerFixtureLoader implements FixtureLoader
             ]
         );
 
-        if(false === $this->connection) {
+        if (false === $this->connection) {
             throw new \Exception(sprintf(
                 "Unable to connect %s. %s",
                 getenv('TESTS_LAMINAS_DB_ADAPTER_DRIVER_SQLSRV_DATABASE'),
