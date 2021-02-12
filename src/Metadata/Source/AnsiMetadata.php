@@ -129,8 +129,6 @@ abstract class AnsiMetadata extends AbstractSource
                   . ' != \'INFORMATION_SCHEMA\'';
         }
 
-        echo "[$sql]\n";
-
         $results = $this->adapter->query($sql, Adapter::QUERY_MODE_EXECUTE);
 
         $tables = [];
@@ -143,9 +141,6 @@ abstract class AnsiMetadata extends AbstractSource
                 'is_updatable' => ('YES' == $row['IS_UPDATABLE']),
             ];
         }
-
-
-        var_dump($tables);
 
         $this->data['table_names'][$schema] = $tables;
     }
