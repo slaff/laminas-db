@@ -8,10 +8,8 @@
 
 namespace LaminasIntegrationTest\Db\Adapter\Metadata;
 
-use Laminas\Db\Adapter\Adapter;
 use Laminas\Db\Metadata\MetadataInterface;
 use Laminas\Db\Metadata\Object\ConstraintObject;
-use Laminas\Db\Metadata\Source\Factory;
 use PHPUnit\Framework\TestCase;
 
 /**

@@ -8,10 +8,8 @@
 
 namespace LaminasIntegrationTest\Db;
 
-use Exception;
 use LaminasIntegrationTest\Db\Platform\FixtureLoader;
 use PDO;
-use PDOException;
 use PHPUnit\Framework\BaseTestListener;
 use PHPUnit_Framework_TestSuite as TestSuite;
 
