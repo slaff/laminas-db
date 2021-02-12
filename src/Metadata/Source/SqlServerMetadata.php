@@ -151,23 +151,23 @@ class SqlServerMetadata extends AnsiMetadata
         $p = $this->adapter->getPlatform();
 
         $isColumns = [
-//            'TRIGGER_CATALOG',
-//            'TRIGGER_SCHEMA',
-            'TRIGGER_NAME',
-            'EVENT_MANIPULATION',
-//             'EVENT_OBJECT_CATALOG',
-            'EVENT_OBJECT_SCHEMA',
-            'EVENT_OBJECT_TABLE',
-            'ACTION_ORDER',
-            'ACTION_CONDITION',
-            'ACTION_STATEMENT',
-            'ACTION_ORIENTATION',
-            'ACTION_TIMING',
-            'ACTION_REFERENCE_OLD_TABLE',
-            'ACTION_REFERENCE_NEW_TABLE',
-            'ACTION_REFERENCE_OLD_ROW',
-            'ACTION_REFERENCE_NEW_ROW',
-            'CREATED',
+//            'trigger_catalog',
+//            'trigger_schema',
+            'trigger_name',
+            'event_manipulation',
+//             'event_object_catalog',
+            'event_object_schema',
+            'event_object_table',
+            'action_order',
+            'action_condition',
+            'action_statement',
+            'action_orientation',
+            'action_timing',
+            'action_reference_old_table',
+            'action_reference_new_table',
+            'action_reference_old_row',
+            'action_reference_new_row',
+            'created',
         ];
 
         array_walk($isColumns, function (&$c) use ($p) {
@@ -205,7 +205,10 @@ class SqlServerMetadata extends AnsiMetadata
             if (null !== $row['created']) {
                 $row['created'] = new \DateTime($row['created']);
             }
-            $data[$row['trigger_name']] = $row;
+            $data[$row['trigger_name']] = array_merge(
+                array_flip($isColumns),
+                $row
+            );
         }
 
         $this->data['triggers'][$schema] = $data;
